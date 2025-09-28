@@ -1,6 +1,6 @@
 FROM ghcr.io/dispatcharr/dispatcharr:latest
 
-# jq is already available in the base image, but ensure it's present
+# jq is already available in the base image, but ensure it's present,
 RUN apk add --no-cache jq 2>/dev/null || true
 
 # Copy startup script
