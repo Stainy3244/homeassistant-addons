@@ -128,9 +128,7 @@ jobs:
         uses: home-assistant/builder@2024.03.5
         with:
           args: >
-            --${{ matrix.arch }} \
-            --target ./Dispatcharr \
+            --${{ matrix.arch }}
             --image "addon-dispatcharr-${{ matrix.arch }}"
-
-
             --addon
+            ./Dispatcharr
