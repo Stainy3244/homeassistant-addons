@@ -11,7 +11,7 @@ jobs:
     name: Build dispatcharr (${{ matrix.arch }})
     strategy:
       matrix:
-        arch: ["amd64", "aarch64", "armv7"]
+        arch: ["amd64", "aarch64"]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
