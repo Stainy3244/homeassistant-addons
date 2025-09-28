@@ -110,7 +110,7 @@ jobs:
     needs: [detect-changes, version-bump]
     strategy:
       matrix:
-        arch: ["amd64", "aarch64", "armv7"]
+        arch: ["amd64", "aarch64"]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
