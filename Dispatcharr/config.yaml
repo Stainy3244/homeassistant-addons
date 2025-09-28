@@ -2,7 +2,7 @@ name: "Dispatcharr"
 version: "0.10.1"
 slug: "dispatcharr"
 description: "IPTV & stream management with configurable shared storage for Home Assistant"
-url: "https://github.com/Stainy3244/dispatcharr-homeassistant-addon"
+url: "https://github.com/Stainy3244/homeassistant-addons"
 arch: ["amd64", "aarch64", "armv7"]
 startup: "services"
 boot: "manual"
