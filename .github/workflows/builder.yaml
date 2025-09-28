@@ -58,12 +58,13 @@ jobs:
           else
             echo "No add-on files changed"
             echo "changed=false" >> $GITHUB_OUTPUT;
+            echo "addons=[]" >> $GITHUB_OUTPUT;
           fi
 
   version-bump:
     runs-on: ubuntu-latest
     name: Auto version bump
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'bump:')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'bump:') && needs.init.outputs.changed == 'true'
     needs: init
     strategy:
       matrix:
