@@ -23,11 +23,17 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build dispatcharr
-        uses: home-assistant/builder@2024.03.5
-        with:
-          args: |
-            --${{ matrix.arch }} \
-            --target ./Dispatcharr \
-            --image "ghcr.io/${{ github.repository_owner }}/addon-dispatcharr-${{ matrix.arch }}" \
+- name: Build ${{ matrix.addon }}
+  uses: home-assistant/builder@2024.03.5
+  env:
+    BUILD_ARGS: ${{ github.event_name == 'pull_request' && '--test' || '' }}
+  with:
+    args: |
+      ${{ env.BUILD_ARGS }} \
+      --${{ matrix.arch }} \
+      --target ./dispatcharr \
+      --image "ghcr.io/${{ github.repository_owner }}/addon-dispatcharr" \
+      --tag "${{ needs.version-bump.outputs.new_version }}" \
+      --tag "latest"
+
             --addon
