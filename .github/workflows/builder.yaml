@@ -130,4 +130,4 @@ jobs:
           args: >
             --${{ matrix.arch }}
             --image "addon-dispatcharr-${{ matrix.arch }}"
-            --addon ./Dispatcharr
+            --addon dispatcharr
