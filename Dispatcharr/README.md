@@ -1,4 +1,4 @@
-# Dispatcharr Home Assistant Add-on
+# Dispatcharr Home Assistant Add-on (Not yet working for Arm processors - sorry)
 
 IPTV & stream management with seamless Home Assistant integration.
 
