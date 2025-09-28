@@ -190,7 +190,7 @@ jobs:
         env:
           BUILD_ARGS: ${{ github.event_name == 'pull_request' && '--test' || '' }}
         with:
-          args: |
+          args: >
             ${{ env.BUILD_ARGS }} \
             --${{ matrix.arch }} \
             --target ./Dispatcharr \
