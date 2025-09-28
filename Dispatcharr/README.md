@@ -26,7 +26,7 @@ This add-on wraps Dispatcharr in a Home Assistant add-on, providing:
 
 1. Navigate to **Supervisor** → **Add-on Store** in Home Assistant
 2. Click the menu (⋮) in the top right → **Repositories**
-3. Add this repository: `https://github.com/Stainy3244/dispatcharr`
+3. Add this repository: `https://github.com/Stainy3244/homeassistant-addons/dispatcharr`
 4. Find "Dispatcharr" in the add-on store and click **Install**
 
 ### Method 2: Manual Installation
