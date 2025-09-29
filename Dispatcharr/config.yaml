@@ -23,7 +23,7 @@ options:
   custom_path: ""
   log_level: "info"
 schema:
-  recordings_location: "list(share|media|config)"
+  recordings_location: "list(media|share|config)"
   custom_path: str?
   log_level: "list(info|debug|warn|error)"
 image: "ghcr.io/stainy3244/addon-dispatcharr-{arch}"
