@@ -5,12 +5,12 @@ set -e
 CONFIG_PATH="/data/options.json"
 
 # Get configuration values with defaults
-RECORDINGS_LOCATION="share"
+RECORDINGS_LOCATION="media"
 CUSTOM_PATH=""
 LOG_LEVEL="info"
 
 if [ -f "$CONFIG_PATH" ]; then
-    RECORDINGS_LOCATION=$(jq -r '.recordings_location // "share"' "$CONFIG_PATH")
+    RECORDINGS_LOCATION=$(jq -r '.recordings_location // "media"' "$CONFIG_PATH")
     CUSTOM_PATH=$(jq -r '.custom_path // ""' "$CONFIG_PATH")
     LOG_LEVEL=$(jq -r '.log_level // "info"' "$CONFIG_PATH")
 fi
@@ -34,8 +34,8 @@ else
             TARGET_DIR="/config/dispatcharr"
             ;;
         *)
-            TARGET_DIR="/share/dispatcharr"
-            echo "[WARN] Unknown location '$RECORDINGS_LOCATION', defaulting to /share/dispatcharr"
+            TARGET_DIR="/media/dispatcharr"
+            echo "[WARN] Unknown location '$RECORDINGS_LOCATION', defaulting to /media/dispatcharr"
             ;;
     esac
     echo "[INFO] Using $RECORDINGS_LOCATION recordings location: $TARGET_DIR"
