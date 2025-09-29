@@ -10,20 +10,9 @@ CUSTOM_PATH=""
 LOG_LEVEL="info"
 
 if [ -f "$CONFIG_PATH" ]; then
-    tmp=$(jq -r '.recordings_location' "$CONFIG_PATH")
-    if [ -n "$tmp" ] && [ "$tmp" != "null" ]; then
-        RECORDINGS_LOCATION="$tmp"
-    fi
-
-    tmp=$(jq -r '.custom_path' "$CONFIG_PATH")
-    if [ -n "$tmp" ] && [ "$tmp" != "null" ]; then
-        CUSTOM_PATH="$tmp"
-    fi
-
-    tmp=$(jq -r '.log_level' "$CONFIG_PATH")
-    if [ -n "$tmp" ] && [ "$tmp" != "null" ]; then
-        LOG_LEVEL="$tmp"
-    fi
+    RECORDINGS_LOCATION=$(jq -r '.recordings_location // "media"' "$CONFIG_PATH")
+    CUSTOM_PATH=$(jq -r '.custom_path // ""' "$CONFIG_PATH")
+    LOG_LEVEL=$(jq -r '.log_level // "info"' "$CONFIG_PATH")
 fi
 
 echo "[INFO] Dispatcharr Home Assistant Add-on starting..."
