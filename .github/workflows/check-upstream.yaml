@@ -1,0 +1,81 @@
+name: Check Upstream Dispatcharr Version
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Check daily at 6am UTC
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Get current add-on version
+        id: current
+        run: |
+          CURRENT=$(grep 'version:' Dispatcharr/config.yaml | sed 's/version: *"\(.*\)"/\1/')
+          echo "version=$CURRENT" >> $GITHUB_OUTPUT
+          echo "Current add-on version: $CURRENT"
+
+      - name: Get latest Dispatcharr release
+        id: upstream
+        run: |
+          LATEST=$(curl -s https://api.github.com/repos/dispatcharr/dispatcharr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+          echo "version=$LATEST" >> $GITHUB_OUTPUT
+          echo "Latest upstream version: $LATEST"
+
+      - name: Compare versions
+        id: compare
+        run: |
+          CURRENT="${{ steps.current.outputs.version }}"
+          LATEST="${{ steps.upstream.outputs.version }}"
+          
+          if [ "$CURRENT" != "$LATEST" ]; then
+            echo "update_available=true" >> $GITHUB_OUTPUT
+            echo "New version available: $LATEST (current: $CURRENT)"
+          else
+            echo "update_available=false" >> $GITHUB_OUTPUT
+            echo "Already on latest version"
+          fi
+
+      - name: Update config.yaml
+        if: steps.compare.outputs.update_available == 'true'
+        run: |
+          CURRENT="${{ steps.current.outputs.version }}"
+          LATEST="${{ steps.upstream.outputs.version }}"
+          
+          # Update version in config.yaml
+          sed -i "s/version: \"$CURRENT\"/version: \"$LATEST\"/" Dispatcharr/config.yaml
+          
+          echo "Updated config.yaml to version $LATEST"
+
+      - name: Create Pull Request
+        if: steps.compare.outputs.update_available == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update Dispatcharr to v${{ steps.upstream.outputs.version }}"
+          title: "Update Dispatcharr to v${{ steps.upstream.outputs.version }}"
+          body: |
+            ## Upstream Version Update
+            
+            New Dispatcharr release detected!
+            
+            - **Current version**: ${{ steps.current.outputs.version }}
+            - **New version**: ${{ steps.upstream.outputs.version }}
+            - **Upstream release**: https://github.com/dispatcharr/dispatcharr/releases/tag/v${{ steps.upstream.outputs.version }}
+            
+            ### Changes
+            This PR updates the add-on to use the latest Dispatcharr release.
+            
+            Please review the upstream release notes before merging.
+            
+            ---
+            *This PR was automatically created by the upstream version checker workflow.*
+          branch: update-dispatcharr-${{ steps.upstream.outputs.version }}
+          delete-branch: true
+          labels: |
+            upstream-update
+            automated
