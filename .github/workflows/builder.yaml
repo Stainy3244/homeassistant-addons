@@ -127,7 +127,8 @@ jobs:
       - name: Build dispatcharr
         uses: home-assistant/builder@2024.03.5
         with:
-          args: >
-            --${{ matrix.arch }}
-            --image "addon-dispatcharr-${{ matrix.arch }}"
-            --addon dispatcharr
+          args: |
+            --${{ matrix.arch }} \
+            --target ./Dispatcharr \
+            --image "ghcr.io/${{ github.repository_owner }}/addon-dispatcharr-${{ matrix.arch }}" \
+            --addon
