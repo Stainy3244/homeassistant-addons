@@ -11,7 +11,7 @@ RUN chmod +x /run.sh
 LABEL \
     io.hass.name="Dispatcharr" \
     io.hass.description="IPTV & stream management with configurable shared storage" \
-    io.hass.arch="amd64|aarch64|armv7" \
+    io.hass.arch="amd64|aarch64" \
     io.hass.type="addon" \
     io.hass.version="0.10.1" \
     maintainer="Stainy3244"
