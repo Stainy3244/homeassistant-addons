@@ -28,81 +28,6 @@ jobs:
             echo "No Dispatcharr changes detected"
           fi
 
-  version-bump:
-    runs-on: ubuntu-latest
-    name: Auto version bump
-    if: needs.detect-changes.outputs.dispatcharr_changed == 'true' && github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'bump:')
-    needs: detect-changes
-    steps:
-      - name: Check out the repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Git
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-      - name: Get current version
-        id: current
-        run: |
-          CURRENT_VERSION=$(grep 'version:' Dispatcharr/config.yaml | sed 's/version: *"\(.*\)"/\1/')
-          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-          echo "Current version: $CURRENT_VERSION"
-
-      - name: Determine version bump type
-        id: bump_type
-        run: |
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-          if [[ "$COMMIT_MSG" =~ feat(\(.+\))?!:|BREAKING[[:space:]]CHANGE ]]; then
-            echo "bump_type=major" >> $GITHUB_OUTPUT
-          elif [[ "$COMMIT_MSG" =~ feat(\(.+\))?: ]]; then
-            echo "bump_type=minor" >> $GITHUB_OUTPUT  
-          else
-            echo "bump_type=patch" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Bump version
-        id: bump
-        run: |
-          CURRENT="${{ steps.current.outputs.current_version }}"
-          BUMP_TYPE="${{ steps.bump_type.outputs.bump_type }}"
-          
-          IFS='.' read -ra VERSION_PARTS <<< "$CURRENT"
-          MAJOR=${VERSION_PARTS[0]}
-          MINOR=${VERSION_PARTS[1]}  
-          PATCH=${VERSION_PARTS[2]}
-          
-          case $BUMP_TYPE in
-            major)
-              MAJOR=$((MAJOR + 1))
-              MINOR=0
-              PATCH=0
-              ;;
-            minor)
-              MINOR=$((MINOR + 1))
-              PATCH=0
-              ;;
-            patch)
-              PATCH=$((PATCH + 1))
-              ;;
-          esac
-          
-          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "Bumped version from $CURRENT to $NEW_VERSION (type: $BUMP_TYPE)"
-          
-          # Update config.yaml
-          sed -i "s/version: \"$CURRENT\"/version: \"$NEW_VERSION\"/" Dispatcharr/config.yaml
-          
-          # Commit and push
-          git add Dispatcharr/config.yaml
-          git commit -m "bump: version $CURRENT → $NEW_VERSION"
-          git tag "v$NEW_VERSION"
-          git push
-          git push --tags
-
   build:
     runs-on: ubuntu-latest
     name: Build dispatcharr (${{ matrix.arch }})
@@ -110,7 +35,7 @@ jobs:
     needs: [detect-changes, version-bump]
     strategy:
       matrix:
-        arch: ["amd64", "aarch64"]
+        arch: ["amd64", "aarch64", "armv7"]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
