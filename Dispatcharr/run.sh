@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# Read Home Assistant add-on configuration
 CONFIG_PATH="/data/options.json"
 
 # Get configuration values with defaults
@@ -19,7 +18,7 @@ echo "[INFO] Dispatcharr Home Assistant Add-on starting..."
 echo "[INFO] Log level: $LOG_LEVEL"
 
 # Determine target directory for recordings
-if [ -n "$CUSTOM_PATH" ] && [ "$CUSTOM_PATH" != "null" ]; then
+if [ -n "$CUSTOM_PATH" ] && [ "$CUSTOM_PATH" != "null" ] && [ "$CUSTOM_PATH" != '""' ]; then
     TARGET_DIR="$CUSTOM_PATH"
     echo "[INFO] Using custom recordings path: $TARGET_DIR"
 else
@@ -45,10 +44,19 @@ fi
 mkdir -p "$TARGET_DIR"
 echo "[INFO] Created/verified recordings directory: $TARGET_DIR"
 
-# Handle existing recordings directory
-if [ -d "/data/recordings" ] && [ ! -L "/data/recordings" ]; then
+# Handle existing recordings directory or symlink
+if [ -L "/data/recordings" ]; then
+    CURRENT_TARGET=$(readlink /data/recordings)
+    if [ "$CURRENT_TARGET" != "$TARGET_DIR" ]; then
+        echo "[INFO] Symlink points to wrong location ($CURRENT_TARGET), recreating..."
+        rm /data/recordings
+        ln -sf "$TARGET_DIR" /data/recordings
+        echo "[INFO] Symlink updated: /data/recordings -> $TARGET_DIR"
+    else
+        echo "[INFO] Symlink already correct: /data/recordings -> $TARGET_DIR"
+    fi
+elif [ -d "/data/recordings" ]; then
     echo "[INFO] Found existing recordings directory, migrating to shared location..."
-    # Count files to migrate
     FILE_COUNT=$(find /data/recordings -type f 2>/dev/null | wc -l)
     if [ "$FILE_COUNT" -gt 0 ]; then
         echo "[INFO] Moving $FILE_COUNT existing recording files..."
@@ -56,28 +64,22 @@ if [ -d "/data/recordings" ] && [ ! -L "/data/recordings" ]; then
         echo "[INFO] File migration completed"
     fi
     rm -rf /data/recordings
-fi
-
-# Create symlink if not already present
-if [ ! -L "/data/recordings" ]; then
     ln -sf "$TARGET_DIR" /data/recordings
     echo "[INFO] Created symlink: /data/recordings -> $TARGET_DIR"
 else
-    echo "[INFO] Symlink already exists: $(readlink /data/recordings)"
+    ln -sf "$TARGET_DIR" /data/recordings
+    echo "[INFO] Created symlink: /data/recordings -> $TARGET_DIR"
 fi
 
 # Verify symlink setup
 if [ -L "/data/recordings" ]; then
     echo "[INFO] ✅ Recording symlink setup successful"
-    echo "[INFO] Recordings will be accessible to other Home Assistant add-ons at: $TARGET_DIR"
+    echo "[INFO] Recordings will be accessible at: $TARGET_DIR"
 else
     echo "[ERROR] ❌ Failed to create recording symlink"
 fi
 
-# Set log level environment variable for Dispatcharr
 export LOG_LEVEL="$LOG_LEVEL"
-
 echo "[INFO] Starting Dispatcharr application..."
 
-# Start original Dispatcharr
 exec /app/docker/entrypoint.sh
