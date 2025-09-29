@@ -19,7 +19,7 @@ webui: "http://[HOST]:[PORT:9191]"
 panel_icon: "mdi:play-network"
 panel_title: "Dispatcharr"
 options:
-  recordings_location: "share"
+  recordings_location: "media"
   custom_path: ""
   log_level: "info"
 schema:
