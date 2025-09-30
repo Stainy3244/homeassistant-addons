@@ -9,8 +9,21 @@ boot: "manual"
 init: false
 map:
   - "share:rw"
+  - "media:rw"
+  - "config:rw"
+ports:
+  "9191/tcp": 9191
+ports_description:
+  "9191/tcp": "Web interface"
+webui: "http://[HOST]:[PORT:9191]"
+panel_icon: "mdi:play-network"
+panel_title: "Dispatcharr"
 options:
+  recordings_location: "media"
+  custom_path: ""
   log_level: "info"
 schema:
+  recordings_location: "list(media|share|config)"
+  custom_path: str?
   log_level: "list(info|debug|warn|error)"
 image: "ghcr.io/stainy3244/addon-dispatcharr-{arch}"
