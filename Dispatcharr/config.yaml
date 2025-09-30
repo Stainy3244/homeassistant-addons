@@ -13,3 +13,4 @@ options:
   log_level: "info"
 schema:
   log_level: "list(info|debug|warn|error)"
+image: "ghcr.io/stainy3244/addon-dispatcharr-{arch}"
