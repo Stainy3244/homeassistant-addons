@@ -1,4 +1,4 @@
-# Dispatcharr Home Assistant Add-on (Not yet working for Arm processors - sorry)
+# Dispatcharr Home Assistant Add-on (No armv7 build and probably unlikely to be - sorry)
 This is my first attempt at a Homeassistant addon. AI did 90% of the heavy lifting with trial/error and my spotting basic AI mistakes
 making up the rest. There will be lots of errors and ways to streamline this, but it works for my purposes until someone more
 talented than me comes along and builds it properly. Feel free to use it, but please bear in mind it's very rough around the edges.
