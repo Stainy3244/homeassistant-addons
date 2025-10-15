@@ -116,8 +116,8 @@ log_level: "debug"                           # Logging level
 
 ## Changelog
 
-### 0.10.0
-- Initial Home Assistant add-on release
+### 0.10.4
+- Home Assistant add-on release
 - Shared storage integration
 - Configurable recording paths
 - Home Assistant panel integration
