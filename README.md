@@ -5,7 +5,7 @@ Welcome to my collection of custom Home Assistant add-ons! This is a personal pr
 ## 📦 Current Add-ons
 
 ### Dispatcharr
-My first add-on - currently working for my needs and only be updated with upstream changes.
+My first add-on - currently working for my needs and only being updated with upstream changes.
 
 ## 🚧 Project Status
 
