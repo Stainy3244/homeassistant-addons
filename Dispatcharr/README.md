@@ -114,13 +114,6 @@ log_level: "debug"                           # Logging level
 - 💬 [Home Assistant Community](https://community.home-assistant.io/)
 - 📖 [Original Dispatcharr Documentation](https://github.com/dispatcharr/dispatcharr)
 
-## Changelog
-
-### 0.10.4
-- Home Assistant add-on release
-- Shared storage integration
-- Configurable recording paths
-- Home Assistant panel integration
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/Stainy3244/dispatcharr.svg
 [commits]: https://github.com/Stainy3244/dispatcharr/commits/main
