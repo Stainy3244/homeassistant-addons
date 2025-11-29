@@ -19,7 +19,6 @@ options:
 schema:
   UID: int(0,65535)
   GID: int(0,65535)
-image: ghcr.io/arabcoders/watchstate:latest
 map:
   - config:rw
 watchdog: tcp://localhost:8080
