@@ -82,7 +82,7 @@ jobs:
       - name: Get current add-on version
         id: current
         run: |
-          CURRENT=$(grep 'version:' watchstate/config.yaml | sed 's/version: *"\(.*\)"/\1/')
+          CURRENT=$(grep 'version:' WatchState/config.yaml | sed 's/version: *"\(.*\)"/\1/')
           echo "version=$CURRENT" >> $GITHUB_OUTPUT
           echo "Current add-on version: $CURRENT"
       - name: Get latest WatchState Docker tag
@@ -123,7 +123,7 @@ jobs:
           LATEST="${{ steps.upstream.outputs.version }}"
           
           # Update version in config.yaml
-          sed -i "s/version: \"$CURRENT\"/version: \"$LATEST\"/" watchstate/config.yaml
+          sed -i "s/version: \"$CURRENT\"/version: \"$LATEST\"/" WatchState/config.yaml
           
           echo "Updated config.yaml to version $LATEST"
       - name: Create Pull Request
