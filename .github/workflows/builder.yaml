@@ -2,6 +2,9 @@ name: Builder
 on:
   push:
     branches: [main]
+    paths:
+      - 'Dispatcharr/**'
+      - 'WatchState/**'
   workflow_dispatch:
 jobs:
   detect-changes:
@@ -36,7 +39,7 @@ jobs:
   build-dispatcharr:
     runs-on: ubuntu-latest
     name: Build dispatcharr (${{ matrix.arch }})
-    if: needs.detect-changes.outputs.dispatcharr_changed == 'true'
+    if: needs.detect-changes.outputs.dispatcharr_changed == 'true' || github.event_name == 'workflow_dispatch'
     needs: detect-changes
     strategy:
       matrix:
@@ -67,7 +70,7 @@ jobs:
   build-watchstate:
     runs-on: ubuntu-latest
     name: Build watchstate (${{ matrix.arch }})
-    if: needs.detect-changes.outputs.watchstate_changed == 'true'
+    if: needs.detect-changes.outputs.watchstate_changed == 'true' || github.event_name == 'workflow_dispatch'
     needs: detect-changes
     strategy:
       matrix:
