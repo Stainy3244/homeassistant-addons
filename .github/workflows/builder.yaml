@@ -26,7 +26,7 @@ jobs:
             echo "No Dispatcharr changes detected"
           fi
           
-          if git diff --name-only HEAD~1 HEAD | grep -E "^watchstate/" > /dev/null; then
+          if git diff --name-only HEAD~1 HEAD | grep -E "^WatchState/" > /dev/null; then
             echo "watchstate=true" >> $GITHUB_OUTPUT
             echo "WatchState files changed"
           else
@@ -78,7 +78,7 @@ jobs:
       - name: Get version from config
         id: version
         run: |
-          VERSION=$(grep 'version:' watchstate/config.yaml | sed 's/version: *"\(.*\)"/\1/')
+          VERSION=$(grep 'version:' WatchState/config.yaml | sed 's/version: *"\(.*\)"/\1/')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Building version $VERSION"
       - name: Login to GitHub Container Registry
@@ -92,6 +92,6 @@ jobs:
         with:
           args: >
             --${{ matrix.arch }}
-            --target ./watchstate
+            --target ./WatchState
             --image "addon-watchstate-${{ matrix.arch }}"
             --version ${{ steps.version.outputs.version }}
