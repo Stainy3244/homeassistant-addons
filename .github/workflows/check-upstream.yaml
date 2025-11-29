@@ -1,31 +1,27 @@
-name: Check Upstream Dispatcharr Version
-
+name: Check Upstream Versions
 on:
   schedule:
     - cron: '0 6 * * *'  # Check daily at 6am UTC
   workflow_dispatch:  # Allow manual trigger
-
 jobs:
-  check-version:
+  check-dispatcharr:
     runs-on: ubuntu-latest
+    name: Check Dispatcharr Version
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-
       - name: Get current add-on version
         id: current
         run: |
           CURRENT=$(grep 'version:' Dispatcharr/config.yaml | sed 's/version: *"\(.*\)"/\1/')
           echo "version=$CURRENT" >> $GITHUB_OUTPUT
           echo "Current add-on version: $CURRENT"
-
       - name: Get latest Dispatcharr release
         id: upstream
         run: |
           LATEST=$(curl -s https://api.github.com/repos/dispatcharr/dispatcharr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
           echo "version=$LATEST" >> $GITHUB_OUTPUT
           echo "Latest upstream version: $LATEST"
-
       - name: Compare versions
         id: compare
         run: |
@@ -39,7 +35,6 @@ jobs:
             echo "update_available=false" >> $GITHUB_OUTPUT
             echo "Already on latest version"
           fi
-
       - name: Update config.yaml
         if: steps.compare.outputs.update_available == 'true'
         run: |
@@ -50,7 +45,6 @@ jobs:
           sed -i "s/version: \"$CURRENT\"/version: \"$LATEST\"/" Dispatcharr/config.yaml
           
           echo "Updated config.yaml to version $LATEST"
-
       - name: Create Pull Request
         if: steps.compare.outputs.update_available == 'true'
         uses: peter-evans/create-pull-request@v6
@@ -75,6 +69,87 @@ jobs:
             ---
             *This PR was automatically created by the upstream version checker workflow.*
           branch: update-dispatcharr-${{ steps.upstream.outputs.version }}
+          delete-branch: true
+          labels: |
+            upstream-update
+            automated
+  check-watchstate:
+    runs-on: ubuntu-latest
+    name: Check WatchState Version
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Get current add-on version
+        id: current
+        run: |
+          CURRENT=$(grep 'version:' watchstate/config.yaml | sed 's/version: *"\(.*\)"/\1/')
+          echo "version=$CURRENT" >> $GITHUB_OUTPUT
+          echo "Current add-on version: $CURRENT"
+      - name: Get latest WatchState Docker tag
+        id: upstream
+        run: |
+          # Get the latest tag from the WatchState Docker registry
+          LATEST=$(curl -s https://api.github.com/repos/arabcoders/watchstate/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+          
+          # If no release found, check Docker registry directly
+          if [ -z "$LATEST" ] || [ "$LATEST" = "null" ]; then
+            echo "No GitHub release found, using 'latest' tag"
+            LATEST="latest"
+          fi
+          
+          echo "version=$LATEST" >> $GITHUB_OUTPUT
+          echo "Latest upstream version: $LATEST"
+      - name: Compare versions
+        id: compare
+        run: |
+          CURRENT="${{ steps.current.outputs.version }}"
+          LATEST="${{ steps.upstream.outputs.version }}"
+          
+          # Skip if using 'latest' tag
+          if [ "$LATEST" = "latest" ]; then
+            echo "update_available=false" >> $GITHUB_OUTPUT
+            echo "Upstream uses rolling 'latest' tag, skipping version check"
+          elif [ "$CURRENT" != "$LATEST" ]; then
+            echo "update_available=true" >> $GITHUB_OUTPUT
+            echo "New version available: $LATEST (current: $CURRENT)"
+          else
+            echo "update_available=false" >> $GITHUB_OUTPUT
+            echo "Already on latest version"
+          fi
+      - name: Update config.yaml
+        if: steps.compare.outputs.update_available == 'true'
+        run: |
+          CURRENT="${{ steps.current.outputs.version }}"
+          LATEST="${{ steps.upstream.outputs.version }}"
+          
+          # Update version in config.yaml
+          sed -i "s/version: \"$CURRENT\"/version: \"$LATEST\"/" watchstate/config.yaml
+          
+          echo "Updated config.yaml to version $LATEST"
+      - name: Create Pull Request
+        if: steps.compare.outputs.update_available == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update WatchState to v${{ steps.upstream.outputs.version }}"
+          title: "Update WatchState to v${{ steps.upstream.outputs.version }}"
+          body: |
+            ## Upstream Version Update
+            
+            New WatchState release detected!
+            
+            - **Current version**: ${{ steps.current.outputs.version }}
+            - **New version**: ${{ steps.upstream.outputs.version }}
+            - **Upstream release**: https://github.com/arabcoders/watchstate/releases/tag/v${{ steps.upstream.outputs.version }}
+            
+            ### Changes
+            This PR updates the add-on to use the latest WatchState release.
+            
+            Please review the upstream release notes before merging.
+            
+            ---
+            *This PR was automatically created by the upstream version checker workflow.*
+          branch: update-watchstate-${{ steps.upstream.outputs.version }}
           delete-branch: true
           labels: |
             upstream-update
