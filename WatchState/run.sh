@@ -1,15 +1,28 @@
-#!/usr/bin/with-contenv bashio
+#!/bin/bash
+set -e
 
-# Get configuration options
-UID=$(bashio::config 'UID')
-GID=$(bashio::config 'GID')
+CONFIG_PATH="/data/options.json"
 
-bashio::log.info "Starting WatchState..."
-bashio::log.info "Running as UID: ${UID}, GID: ${GID}"
+# Get configuration values with defaults
+UID=1000
+GID=1000
 
-# Set the user and group
-export PUID=${UID}
-export PGID=${GID}
+if [ -f "$CONFIG_PATH" ]; then
+    UID=$(jq -r '.UID // 1000' "$CONFIG_PATH")
+    GID=$(jq -r '.GID // 1000' "$CONFIG_PATH")
+fi
 
-# Start WatchState
+echo "[INFO] WatchState Home Assistant Add-on starting..."
+echo "[INFO] Running as UID: $UID, GID: $GID"
+
+# Set the user and group for WatchState
+export PUID=$UID
+export PGID=$GID
+
+# Ensure config directory exists
+mkdir -p /config
+
+echo "[INFO] Starting WatchState application..."
+
+# Start WatchState using its native entrypoint
 exec /usr/bin/php /app/console.php system:start
