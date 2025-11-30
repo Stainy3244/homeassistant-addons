@@ -1,5 +1,5 @@
 name: WatchState
-version: "1.0.2.5"
+version: "1.0.2.6"
 slug: watchstate
 description: Self-hosted service to sync Plex, Jellyfin and Emby play state
 url: https://github.com/arabcoders/watchstate
@@ -14,12 +14,6 @@ ports:
 ports_description:
   8080/tcp: Web UI
 webui: "http://[HOST]:[PORT:8080]"
-options:
-  UID: 1000
-  GID: 1000
-schema:
-  UID: int(0,65535)
-  GID: int(0,65535)
 map:
   - config:rw
 watchdog: "tcp://[HOST]:8080"
