@@ -1,11 +1,16 @@
-ARG BUILD_FROM=ghcr.io/arabcoders/watchstate:latest
-FROM ${BUILD_FROM}
+FROM ghcr.io/arabcoders/watchstate:latest
 
-# Set shell
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# Copy startup script
+COPY run.sh /run.sh
+RUN chmod +x /run.sh
 
-# Copy run script
-COPY run.sh /
-RUN chmod a+x /run.sh
+# Labels for Home Assistant
+LABEL \
+    io.hass.name="WatchState" \
+    io.hass.description="Self-hosted service to sync Plex, Jellyfin and Emby play state" \
+    io.hass.arch="amd64|aarch64" \
+    io.hass.type="addon" \
+    io.hass.version="1.0.2" \
+    maintainer="Stainy3244"
 
-CMD ["/run.sh"]
+ENTRYPOINT ["/run.sh"]
