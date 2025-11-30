@@ -1,7 +1,7 @@
 FROM ghcr.io/arabcoders/watchstate:latest
 
-# Install jq for config parsing (if not already present)
-RUN apk add --no-cache jq 2>/dev/null || true
+# Install jq for config parsing
+RUN apk add --no-cache jq bash
 
 # Copy startup script with permissions already set
 COPY --chmod=755 run.sh /run.sh
