@@ -3,14 +3,11 @@ set -e
 
 echo "[INFO] WatchState Home Assistant Add-on starting..."
 
-# Use default UID/GID - WatchState handles this internally
-export PUID=1000
-export PGID=1000
-
-# Ensure config directory exists
+# Ensure config directory exists and has correct permissions
 mkdir -p /config
+chmod 755 /config
 
 echo "[INFO] Starting WatchState application..."
 
-# Start WatchState using its native entrypoint
+# Execute the original WatchState entrypoint
 exec /usr/bin/php /app/console.php system:start
