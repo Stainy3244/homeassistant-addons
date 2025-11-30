@@ -97,6 +97,4 @@ jobs:
             --${{ matrix.arch }}
             --target ./WatchState
             --image "addon-watchstate-${{ matrix.arch }}"
-            --version ${{ steps.version.outputs.version }}io/${{ github.repository_owner }}
-            --image watchstate
             --version ${{ steps.version.outputs.version }}
