@@ -1,5 +1,5 @@
 name: "Dispatcharr"
-version: "0.14.0"
+version: "0.15.0"
 slug: "dispatcharr"
 description: "IPTV & stream management with configurable shared storage for Home Assistant"
 url: "https://github.com/Stainy3244/homeassistant-addons"
