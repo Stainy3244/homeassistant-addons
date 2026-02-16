@@ -91,10 +91,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build watchstate
-        uses: home-assistant/builder@2024.03.5
+        uses: home-assistant/builder@master
         with:
-          args: >
-            --${{ matrix.arch }}
-            --target ./WatchState
-            --image "addon-watchstate-${{ matrix.arch }}"
-            --version ${{ steps.version.outputs.version }}
+          args: |
+            --aarch64 \
+            --amd64 \
+            --target /data
