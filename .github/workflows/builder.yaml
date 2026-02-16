@@ -55,9 +55,8 @@ jobs:
         uses: home-assistant/builder@master
         with:
           args: |
-            --${{ matrix.arch }} \
-            --target ./Dispatcharr \
-            --docker-hub ghcr.io/${{ github.repository_owner }}
+            --${{ matrix.arch }}
+            --target ./Dispatcharr
 
   build-watchstate:
     runs-on: ubuntu-latest
@@ -80,8 +79,5 @@ jobs:
         uses: home-assistant/builder@master
         with:
           args: |
-            --${{ matrix.arch }} \
-            --target ./WatchState \
-            --docker-hub ghcr.io/${{ github.repository_owner }}
-            --amd64 \
-            --target /data
+            --${{ matrix.arch }}
+            --target ./Watch
