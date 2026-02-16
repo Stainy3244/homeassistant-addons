@@ -60,13 +60,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build dispatcharr
-        uses: home-assistant/builder@2024.03.5
+        uses: home-assistant/builder@master
         with:
-          args: >
-            --${{ matrix.arch }}
-            --target ./Dispatcharr
-            --image "addon-dispatcharr-${{ matrix.arch }}"
-            --version ${{ steps.version.outputs.version }}
+          args: |
+            --aarch64 \
+            --amd64 \
+            --target /data
   build-watchstate:
     runs-on: ubuntu-latest
     name: Build watchstate (${{ matrix.arch }})
