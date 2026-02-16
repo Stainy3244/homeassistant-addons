@@ -13,7 +13,7 @@ LABEL \
     io.hass.description="IPTV & stream management with configurable shared storage" \
     io.hass.arch="amd64|aarch64" \
     io.hass.type="addon" \
-    io.hass.version="0.19" \
+    io.hass.version="0.19.0" \
     maintainer="Stainy3244"
 
 ENTRYPOINT ["/run.sh"]
