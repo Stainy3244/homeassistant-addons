@@ -6,7 +6,7 @@ LABEL \
     io.hass.description="Self-hosted service to sync Plex, Jellyfin and Emby play state" \
     io.hass.arch="amd64|aarch64" \
     io.hass.type="addon" \
-    io.hass.version="1.0.2.6" \
+    io.hass.version="1.0.8" \
     maintainer="Stainy3244"
 
 # Use the original WatchState entrypoint - don't override it
