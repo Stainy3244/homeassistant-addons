@@ -8,7 +8,7 @@ Welcome to my collection of custom Home Assistant add-ons! This is a personal pr
 My first add-on - currently working for my needs and only being updated with upstream changes.
 
 ### WatchState
-A straight lift of the upstrem docker with necessary tweaks for HomeAssistant use
+A straight lift of the upstream docker with necessary tweaks for HomeAssistant use
 
 ## 🚧 Project Status
 
