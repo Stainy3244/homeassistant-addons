@@ -1,5 +1,5 @@
-﻿name: "Teamarr"
-version: "0.0.1"
+name: "Teamarr"
+version: "0.0.2"
 slug: "teamarr"
 description: "Sports channel and EPG management for Dispatcharr"
 url: "https://github.com/Stainy3244/homeassistant-addons"
