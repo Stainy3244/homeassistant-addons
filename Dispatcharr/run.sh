@@ -79,7 +79,7 @@ else
     echo "[ERROR] ❌ Failed to create recording symlink"
 fi
 
-export LOG_LEVEL="$LOG_LEVEL"
+export DISPATCHARR_LOG_LEVEL="$LOG_LEVEL"
 echo "[INFO] Starting Dispatcharr application..."
 
 exec /app/docker/entrypoint.sh
