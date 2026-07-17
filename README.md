@@ -4,11 +4,11 @@ Welcome to my collection of custom Home Assistant add-ons! This is a personal pr
 
 ## 📦 Current Add-ons
 
-### Dispatcharr
-My first add-on - currently working for my needs and only being updated with upstream changes.
+### Dispatcharr - IPTV Stream management tool
+### WatchState - Sync what you've watched on Plex with Jellyfin (and vice-versa)
+### Teamarr - Sports Stream EPG addon to compliment Dispatcharr
 
-### WatchState
-A straight lift of the upstream docker with necessary tweaks for HomeAssistant use
+All are straight lifts of the upstream with tweaks for HomeAssistant compliance
 
 ## 🚧 Project Status
 
