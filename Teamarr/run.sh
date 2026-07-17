@@ -22,4 +22,4 @@ ln -sfn "$DATA_DIR" "$APP_DATA_DIR"
 echo "Persistent data directory: $DATA_DIR"
 echo "Launching Teamarr..."
 
-exec "$@"
+exec python /app/app.py
