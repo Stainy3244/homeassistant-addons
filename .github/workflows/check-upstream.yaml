@@ -154,3 +154,79 @@ jobs:
           labels: |
             upstream-update
             automated
+
+  check-teamarr:
+    runs-on: ubuntu-latest
+    name: Check Teamarr Version
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Get current add-on version
+        id: current
+        run: |
+          CURRENT=$(grep 'version:' Teamarr/config.yaml | sed 's/version: *"\(.*\)"/\1/')
+          echo "version=$CURRENT" >> $GITHUB_OUTPUT
+          echo "Current add-on version: $CURRENT"
+
+      - name: Get latest Teamarr release
+        id: upstream
+        run: |
+          LATEST=$(curl -s https://api.github.com/repos/Pharaoh-Labs/teamarr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+          echo "version=$LATEST" >> $GITHUB_OUTPUT
+          echo "Latest upstream version: $LATEST"
+
+      - name: Compare versions
+        id: compare
+        run: |
+          CURRENT="${{ steps.current.outputs.version }}"
+          LATEST="${{ steps.upstream.outputs.version }}"
+
+          if [ -z "$LATEST" ] || [ "$LATEST" = "null" ]; then
+            echo "update_available=false" >> $GITHUB_OUTPUT
+            echo "Could not determine latest upstream version"
+          elif [ "$CURRENT" != "$LATEST" ]; then
+            echo "update_available=true" >> $GITHUB_OUTPUT
+            echo "New version available: $LATEST (current: $CURRENT)"
+          else
+            echo "update_available=false" >> $GITHUB_OUTPUT
+            echo "Already on latest version"
+          fi
+
+      - name: Update config.yaml
+        if: steps.compare.outputs.update_available == 'true'
+        run: |
+          CURRENT="${{ steps.current.outputs.version }}"
+          LATEST="${{ steps.upstream.outputs.version }}"
+
+          sed -i "s/version: \"$CURRENT\"/version: \"$LATEST\"/" Teamarr/config.yaml
+
+          echo "Updated config.yaml to version $LATEST"
+
+      - name: Create Pull Request
+        if: steps.compare.outputs.update_available == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update Teamarr to v${{ steps.upstream.outputs.version }}"
+          title: "Update Teamarr to v${{ steps.upstream.outputs.version }}"
+          body: |
+            ## Upstream Version Update
+
+            New Teamarr release detected.
+
+            - **Current version**: ${{ steps.current.outputs.version }}
+            - **New version**: ${{ steps.upstream.outputs.version }}
+            - **Upstream release**: https://github.com/Pharaoh-Labs/teamarr/releases/tag/v${{ steps.upstream.outputs.version }}
+
+            This updates the Home Assistant add-on wrapper to use the latest Teamarr release.
+
+            Please review the upstream release notes before merging.
+
+            ---
+            *This pull request was automatically created by the upstream version checker.*
+          branch: update-teamarr-${{ steps.upstream.outputs.version }}
+          delete-branch: true
+          labels: |
+            upstream-update
+            automated
