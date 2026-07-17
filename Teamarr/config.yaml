@@ -1,0 +1,25 @@
+﻿name: "Teamarr"
+version: "0.0.1"
+slug: "teamarr"
+description: "Sports channel and EPG management for Dispatcharr"
+url: "https://github.com/Stainy3244/homeassistant-addons"
+
+arch:
+  - amd64
+  - aarch64
+
+startup: "services"
+boot: "manual"
+init: false
+
+ports:
+  "9195/tcp": 9195
+
+ports_description:
+  "9195/tcp": "Web interface"
+
+webui: "http://[HOST]:[PORT:9195]"
+panel_icon: "mdi:television-guide"
+panel_title: "Teamarr"
+
+image: "ghcr.io/stainy3244/addon-teamarr-{arch}"
