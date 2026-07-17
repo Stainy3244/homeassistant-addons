@@ -7,13 +7,14 @@ RUN apk add --no-cache jq 2>/dev/null || true
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
-# Labels for Home Assistant
+ARG BUILD_VERSION
+
 LABEL \
-    io.hass.name="Dispatcharr" \
-    io.hass.description="IPTV & stream management with configurable shared storage" \
-    io.hass.arch="amd64|aarch64" \
-    io.hass.type="addon" \
-    io.hass.version="0.19.0" \
-    maintainer="Stainy3244"
+  io.hass.name="Dispatcharr" \
+  io.hass.description="IPTV & stream management with configurable shared storage" \
+  io.hass.arch="amd64|aarch64" \
+  io.hass.type="addon" \
+  io.hass.version="${BUILD_VERSION}" \
+  maintainer="Stainy3244"
 
 ENTRYPOINT ["/run.sh"]
