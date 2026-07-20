@@ -1,13 +1,14 @@
 FROM ghcr.io/dispatcharr/dispatcharr:latest
 
+# Re-declare the argument AFTER the FROM line so the build layer can capture it
+ARG BUILD_VERSION
+
 # jq is already available in the base image, but ensure it's present
 RUN apk add --no-cache jq 2>/dev/null || true
 
 # Copy startup script
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
-
-ARG BUILD_VERSION
 
 LABEL \
   io.hass.name="Dispatcharr" \
