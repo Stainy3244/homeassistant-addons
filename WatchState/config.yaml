@@ -1,5 +1,5 @@
 name: WatchState
-version: "1.10.2"
+version: "1.10.3"
 slug: watchstate
 description: Self-hosted service to sync Plex, Jellyfin and Emby play state
 url: "https://github.com/arabcoders/watchstate"
